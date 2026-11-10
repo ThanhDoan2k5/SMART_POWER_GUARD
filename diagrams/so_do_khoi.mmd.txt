@@ -1,0 +1,78 @@
+
+%%{init: {"flowchart": {"curve": "step", "nodeSpacing": 45, "rankSpacing": 55, "htmlLabels": true}}}%%
+
+flowchart TB
+
+    %% COT TRUYEN THONG
+    subgraph NETWORK[" "]
+        direction TB
+        USER["Máy tính /<br/>Smartphone"]
+        DASH["Node-RED<br/>Dashboard"]
+        MQTT["MQTT Broker<br/>Online"]
+        WIFI["Wi-Fi / 4G LTE"]
+
+        USER <--> DASH
+        DASH <--> MQTT
+        MQTT <--> WIFI
+    end
+
+    %% KHOI CAM BIEN
+    subgraph SENSOR["KHỐI CẢM BIẾN"]
+        direction LR
+        AHT["AHT20"]
+        RTC["DS3231 RTC"]
+        PZEM["PZEM-004T V3.0"]
+    end
+
+    %% DIEU KHIEN TRUNG TAM
+    ESP["ESP32-S3 N16R8"]
+
+    %% KHOI CHAP HANH
+    subgraph ACTUATOR["KHỐI CHẤP HÀNH"]
+        direction LR
+        RELAY["Relay 4 kênh"]
+        BUZZER["Buzzer 5V +<br/>Driver"]
+    end
+
+    %% KHOI NGUON VA TAI
+    subgraph POWER["KHỐI NGUỒN VÀ TẢI"]
+        direction TB
+        SOCKET["4 ổ cắm đầu ra"]
+        AC["Nguồn AC 220V"]
+        PROTECT["Bảo vệ + Đo điện<br/>năng"]
+    end
+
+    %% KET NOI CAM BIEN
+    AHT <--> ESP
+    RTC <--> ESP
+    PZEM <--> ESP
+
+    %% KET NOI MANG
+    WIFI <--> ESP
+
+    %% KET NOI CHAP HANH
+    ESP --> RELAY
+    ESP --> BUZZER
+
+    %% DUONG DIEN LUC
+    AC --> PROTECT
+    PROTECT --> RELAY
+    RELAY --> SOCKET
+
+    %% DINH DANG
+    classDef network fill:#ffffff,stroke:#64748b,stroke-width:1.5px,color:#222
+    classDef sensor fill:#ffffff,stroke:#d946ef,stroke-width:1.3px,color:#222
+    classDef control fill:#ffffff,stroke:#64748b,stroke-width:1.5px,color:#222
+    classDef actuator fill:#ffffff,stroke:#2dd4bf,stroke-width:1.3px,color:#222
+    classDef power fill:#ffffff,stroke:#f97316,stroke-width:1.3px,color:#222
+
+    class USER,DASH,MQTT,WIFI network
+    class AHT,RTC,PZEM sensor
+    class ESP control
+    class RELAY,BUZZER actuator
+    class SOCKET,AC,PROTECT power
+
+    style SENSOR fill:#fdf4ff,stroke:#e879f9,stroke-width:1px
+    style ACTUATOR fill:#f0fdfa,stroke:#2dd4bf,stroke-width:1px
+    style POWER fill:#fff7ed,stroke:#f97316,stroke-width:1px
+    style NETWORK fill:transparent,stroke:transparent
